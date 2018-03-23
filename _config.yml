@@ -6,7 +6,7 @@
 name: Blogs from the OTP team
 
 # Short bio or description (displayed in the header)
-description: OTP 
+description: The OTP team at Ericsson, the implementors and maintainers of Erlang/OTP.
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: images/erlang-logo.png
