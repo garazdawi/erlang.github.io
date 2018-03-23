@@ -12,7 +12,7 @@ description: The OTP team at Ericsson, the implementors and maintainers of Erlan
 avatar: images/erlang-logo.png
 
 theme: jekyll-theme-cayman
-
+show_downloads: false
 #
 # Flags below are optional
 #
