@@ -11,8 +11,7 @@ description: The OTP team at Ericsson, the implementors and maintainers of Erlan
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: images/erlang-logo.png
 
-theme: jekyll-theme-cayman
-show_downloads: false
+
 #
 # Flags below are optional
 #
@@ -86,3 +85,6 @@ exclude:
   - LICENSE
   - README.md
   - CNAME
+
+theme: jekyll-theme-cayman
+show_downloads: false
