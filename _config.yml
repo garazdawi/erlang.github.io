@@ -1,7 +1,7 @@
 #
 # This file contains configuration flags to customize your site
 #
-
+theme: jekyll-theme-hacker
 # Name of your site (displayed in the header)
 name: Blogs from the OTP team
 title: Blogs from the OTP team
@@ -88,5 +88,4 @@ exclude:
   - README.md
   - CNAME
 
-theme: jekyll-theme-cayman
 show_downloads: false
