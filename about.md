@@ -4,12 +4,10 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
+The Erlang/OTP team at Ericsson Some are the implementors and maintainers of Erlang/OTP. Erlang/OTP
+was released as Open Source 1998 and we have been around since then.
 
-### More Information
+The intention with this blog is that we write posts about Erlang/OTP that is of general interest. It can be technical
+posts about new or old features that we want to push for. It can also be historical flashbacks or anything else we think is interesting to share.
 
-A place to include any other types of information that you'd like to include about yourself.
-
-### Contact me
-
-[email@domain.com](mailto:email@domain.com)
+The posts will be written by different persons from the Erlang/OTP team.
