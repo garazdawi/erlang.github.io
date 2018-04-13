@@ -222,15 +222,10 @@ nav {
     display: block;
     font-size: 16px;
   }
-}
-
-nav > a {
-  color: #A2003E;//!important
-}	
 	
 a {
     margin-left: 20px;
-    color: $darkGray;
+    color: $erlang-red;
     text-align: right;
     font-weight: 300;
     letter-spacing: 1px;
