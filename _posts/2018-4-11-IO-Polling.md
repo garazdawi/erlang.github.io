@@ -2,6 +2,7 @@
 layout: post
 title: I/O polling options in OTP 21
 tags: erts polling tcp
+author: Lukas Larsson
 ---
 
 Erlang/OTP 21 will introduce a completely new IO polling implementation.
