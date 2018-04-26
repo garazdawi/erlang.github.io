@@ -176,7 +176,7 @@ format:
 The result is a list with one expression. The expression is not a
 list, but a **parse tree**. It can be visualized like this:
 
-<img src="../images/compiler-2018-04-26.svg" width=400>
+![Abstract format visualized](../images/compiler-2018-04-26.svg)
 
 The parentheses have been lost, because the structure of the tree
 makes the evaluation order unambiguous.
