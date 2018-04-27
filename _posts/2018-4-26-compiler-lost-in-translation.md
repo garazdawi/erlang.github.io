@@ -53,7 +53,7 @@ pretty-print this module:
 
 %% Example to help explore the compiler front end.
 example(A, B, C, D) ->
-    #rec{mod=?MODULE,func=?FUNCTION_NAME,result=A + (B*C*(D+7))}.
+    #rec{mod=?MODULE,func=?FUNCTION_NAME,result=A + (B*C*(D+42))}.
 ```
 
 We use `-P` option to run the `parse_module` pass and produce
