@@ -133,7 +133,7 @@ The ftp and tfpt parts of inets have been separated into their own applications
 instead of being bundled, OTP-14113.
 
 The rand module has seen a lot of work, adding new features. I'm not sure when or
-how the difference is use full, but the theory around this is fascinating, OTP-13764.
+how the difference is useful, but the theory around this is fascinating, OTP-13764.
 
 The maps module now has an maps:iterator/0 and maps:next/1, OTP-14012.
 
