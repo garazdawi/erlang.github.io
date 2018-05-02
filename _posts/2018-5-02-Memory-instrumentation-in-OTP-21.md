@@ -15,8 +15,8 @@ trying to diagnose might vanish, and you can't use it to troubleshoot issues on
 "production" systems.
 
 The previous implementation had a few major issues to this effect; you had to
-start the emulator with a certain flag, accept considerable overhead, and
-worst of all suspend the emulator while it collected all its data.
+start the Erlang VM with a certain flag, accept considerable overhead, and
+worst of all suspend the VM while it collected all its data.
 
 The amount of data it collected was also quite problematic; with one entry for
 every single allocation it was difficult to tell what was hiding in all that
@@ -31,7 +31,7 @@ responsiveness of the system.
 
 ## Carriers and memory fragmentation
 
-BEAM allocates memory in large segments we call "carriers" and then allocates
+The VM allocates memory in large segments we call "carriers" and then allocates
 blocks within those. This has many benefits; since each carrier is completely
 separate from the others it's easy to determine when they can be returned to
 the operating system, and they scale very well since we can guarantee that
