@@ -49,7 +49,7 @@ While you can glean some information about average carrier utilization from
 `erlang:system_info({allocator, Alloc})` and use `pmap` (or similar) to get an
 idea of how fragmented the address space is, it has always been a pain to get
 information about the individual carriers. Starting in OTP 21 you can ask the
-system for a list of all carriers without having to start the emulator with any
+system for a list of all carriers without having to start the VM with any
 particular flags. The list contains information about each carrier's total
 size, combined allocation size, allocation count, whether it's in the migration
 pool, and a histogram over free block sizes.
