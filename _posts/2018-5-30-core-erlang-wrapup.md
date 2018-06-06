@@ -174,7 +174,7 @@ count the number of nodes in the tree that represents the Core Erlang
 code for the module.
 
 This core transform does not do any real transforming, since the last
-line returns the Core Erlang code with any modifications.
+line returns the Core Erlang code without any modifications.
 
 ### sys_core_bsm
 
@@ -363,5 +363,5 @@ more blog posts about Core Erlang in the future.
 
 But in the very near future, it is time to explore the compiler passes
 that follow Core Erlang, and perhaps answer the eternal question about
-the `v3_` prefix. Was where ever a `v2_kernel` (spoiler: yes) or a
+the `v3_` prefix. Was there ever a `v2_kernel` (spoiler: yes) or a
 `v1_kernel` (spoiler: no)?
