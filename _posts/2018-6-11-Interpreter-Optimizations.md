@@ -94,8 +94,8 @@ far stable solution:
       exit(1);
     }
 
-It would seem that [pie] always places code in segments > 4GB so we can just check
-where it put main in a small test program.
+It would seem that [position-independent executable] always places code in
+segments > 4GB so we can just check where it put main in a small test program.
 
 Packing arguments into the instruction word is possible for a significant amount
 of instructions which reduced loaded code size and in turn increased performance.
