@@ -96,8 +96,8 @@ the same as for the previous instruction.
 ```
 
 When those two instructions are executed, the previous instructions have
-established that `{x,0}` contains a tuple of arity
-4. `get_tuple_element` takes three operands. The first is the source
+established that `{x,0}` contains a tuple of arity 4.
+`get_tuple_element` takes three operands. The first is the source
 tuple, `{x,0}`, the second is the **zero-based** index into the tuple,
 and the third operand is the register into which the element from the
 tuple should be stored. Note that there is no failure label because it
