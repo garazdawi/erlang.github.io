@@ -274,7 +274,7 @@ was not designed to be optimizer-friendly.
 As I have tried to show with the example above, one of the hardest
 parts of working with BEAM code is that register allocation has
 already been done and that instructions that may do a garbage
-collection (such as `test_heap`) has already been added.
+collection (such as `test_heap`) have already been added.
 
 Early this year (2018), we decided that we should introduce a new
 intermediate format to alleviate the problems with optimizing BEAM
