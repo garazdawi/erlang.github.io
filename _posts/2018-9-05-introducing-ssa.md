@@ -522,7 +522,6 @@ function blog:foo(_0) {
 
 5:
   _8 = get_tuple_element _0, literal 0
-  @ssa_bool = bif:'=:=' literal tag, literal tag
   _7 = get_tuple_element _0, literal 1
   _9 = put_tuple literal ok, _7
   ret _9
