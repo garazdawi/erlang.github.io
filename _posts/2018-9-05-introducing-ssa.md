@@ -521,7 +521,6 @@ function blog:foo(_0) {
   br @ssa_bool:6, label 5, label 3
 
 5:
-  _8 = get_tuple_element _0, literal 0
   _7 = get_tuple_element _0, literal 1
   _9 = put_tuple literal ok, _7
   ret _9
