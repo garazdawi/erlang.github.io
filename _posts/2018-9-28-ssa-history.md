@@ -778,13 +778,12 @@ linear scan do a better job of allocating registers.
 The most obvious issue I noticed was unnecessary `move` instructions.
 Here are two of the sub passes I added to address that issue:
 
-* [reserve_xregs]: This sub pass gives hint to the linear scan sub pass
-that a certain X register should be used for a certain variable, if possible.
+* [reserve_xregs] gives hints to the linear scan sub pass that a
+certain X register should be used for a certain variable, if possible.
 
-* [opt_get_list]: When matching out elements from a list, there would
-frequently be an extra `move` instruction, which `opt_get_list` tries
-to eliminate. See the comments in the code for an example and an
-explanation.
+* [opt_get_list] tries to eliminate the extra `move` instruction that
+is frequently added when matching out elements from a list.  See the
+comments in the code for an example and an explanation.
 
 Another frequent issue was that the code generated from the new code
 generator used more stack space because two variables that were not
