@@ -162,7 +162,7 @@ work of 4 other instructions.
 
 Using that instruction, this code:
 
-<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
+<pre class="highlight">
     <b>{test,is_tuple,{f,3},[{x,0}]}.</b>
     <b>{test,test_arity,{f,3},[{x,0},4]}.</b>
     <b>{get_tuple_element,{x,0},0,{x,1}}.</b>
@@ -177,7 +177,7 @@ Using that instruction, this code:
 
 can be rewritten like this:
 
-<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
+<pre class="highlight">
     <b>{test,is_tagged_tuple,{f,1},[{x,0},4,{atom,tag}]}.</b>
     {get_tuple_element,{x,0},1,{x,2}}.
     {test_heap,3,3}.
@@ -206,7 +206,7 @@ tools were born as result of that bug.
 Reluctantly, in order to make the optimization safe, we must keep
 the `get_tuple_element` instruction that assigns to `{x,1}`:
 
-<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
+<pre class="highlight">
     {test,is_tagged_tuple,{f,1},[{x,0},4,{atom,tag}]}.
     <b>{get_tuple_element,{x,0},0,{x,1}}.</b>
     {get_tuple_element,{x,0},1,{x,2}}.
@@ -220,7 +220,7 @@ the `get_tuple_element` instruction that assigns to `{x,1}`:
 Another possibility in this case would be to assign an empty list
 (called `nil` in the BEAM assembly language) to `{x,1}`:
 
-<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
+<pre class="highlight">
     {test,is_tagged_tuple,{f,1},[{x,0},4,{atom,tag}]}.
     <b>{move,nil,{x,1}}.</b>
     {get_tuple_element,{x,0},1,{x,2}}.
@@ -234,7 +234,7 @@ Another possibility in this case would be to assign an empty list
 However, in this very simple example, another optimization will
 actually allow the compiler to remove the assignment to `{x,1}`:
 
-<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
+<pre class="highlight">
     {test,is_tagged_tuple,{f,1},[{x,0},4,{atom,tag}]}.
     <b>{test_heap,3,1}.</b>
     <b>{get_tuple_element,{x,0},1,{x,2}}.</b>

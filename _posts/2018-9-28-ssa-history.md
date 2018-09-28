@@ -289,7 +289,7 @@ placed in Y registers. The result will be a `yregs` annotation added
 to each block that allocates a stack frame. For this example, the
 annotation will look like:
 
-<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
+<pre class="highlight">
     %% #{frame_size => 1,<b>yregs => [0]</b>}
 </pre>
 
@@ -335,7 +335,7 @@ Variable `_0` (the argument `L`) is in `{x,0}`. Its copy in `_0:4` is in
 
 But what is `z0`?
 
-<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
+<pre class="highlight">
       [7] <b>z0</b>/@ssa_bool = succeeded x0/_3
       [9] br <b>z0</b>/@ssa_bool, label 3, label 1
 </pre>
@@ -357,7 +357,7 @@ Here are the [references that I used when implementing linear scan][linear_scan_
 The sub pass [frame_size] uses the information from the linear scan pass to calculate the size
 of each stack frame. The result is stored as an annotation:
 
-<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
+<pre class="highlight">
     %% #{<b>frame_size => 1</b>,yregs => [0]}
 </pre>
 
@@ -413,7 +413,7 @@ bar(H, T) ->
 
 Here is the BEAM code, but edited by me to contain an unsafe instruction:
 
-<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
+<pre class="highlight">
       {label,4}.
         {test_heap,2,<b>3</b>}.
         {put_list,{x,0},{x,1},{x,0}}.
