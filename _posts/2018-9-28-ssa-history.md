@@ -197,7 +197,7 @@ clear.
     {move,{x,1},{x,0}}.
 
 Preparing for the call of `lists:sum/1`, the value of `L` in `{x,1}`
-is copied to `{x,0`}.
+is copied to `{x,0}`.
 
     {line,[{location,"blog.erl",5}]}.
     {call_ext,1,{extfunc,lists,sum,1}}.
@@ -289,7 +289,7 @@ placed in Y registers. The result will be a `yregs` annotation added
 to each block that allocates a stack frame. For this example, the
 annotation will look like:
 
-<pre class="highlight">
+<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
     %% #{frame_size => 1,<b>yregs => [0]</b>}
 </pre>
 
@@ -335,7 +335,7 @@ Variable `_0` (the argument `L`) is in `{x,0}`. Its copy in `_0:4` is in
 
 But what is `z0`?
 
-<pre class="highlight">
+<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
       [7] <b>z0</b>/@ssa_bool = succeeded x0/_3
       [9] br <b>z0</b>/@ssa_bool, label 3, label 1
 </pre>
@@ -357,7 +357,7 @@ Here are the [references that I used when implementing linear scan][linear_scan_
 The sub pass [frame_size] uses the information from the linear scan pass to calculate the size
 of each stack frame. The result is stored as an annotation:
 
-<pre class="highlight">
+<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
     %% #{<b>frame_size => 1</b>,yregs => [0]}
 </pre>
 
@@ -384,12 +384,14 @@ I could compile some sample code and try to run it.
 Often I did not even have to run the code to know that it was wrong.
 The compiler would tell me, loudly:
 
+{% raw %}
 ```
 blog: function bar/2+4:
   Internal consistency check failed - please report this bug.
   Instruction: {test_heap,2,3}
   Error:       {{x,2},not_live}:
 ```
+{% endraw %}
 
 It's time to introduce the `beam_validator` pass.
 
@@ -411,7 +413,7 @@ bar(H, T) ->
 
 Here is the BEAM code, but edited by me to contain an unsafe instruction:
 
-<pre class="highlight">
+<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
       {label,4}.
         {test_heap,2,<b>3</b>}.
         {put_list,{x,0},{x,1},{x,0}}.
@@ -421,7 +423,7 @@ Here is the BEAM code, but edited by me to contain an unsafe instruction:
 The number of live registers is here given as `3` instead of `2`.
 That means that `{x,0}`, `{x,1}`, and `{x,2}` are supposed to contain
 valid Erlang terms. Because `bar/2` is only called with two arguments,
-`{x,2`} can contain any old garbage.
+`{x,2}` can contain any old garbage.
 
 When running this code, it could crash the runtime system, or it could
 be completely harmless. It depends on whether there will be a garbage
@@ -435,12 +437,14 @@ which registers are initialized at any point in the function. If it
 finds a reference to a register that is not initialized it will
 complain:
 
+{% raw %}
 ```
 blog: function bar/2+4:
   Internal consistency check failed - please report this bug.
   Instruction: {test_heap,2,3}
   Error:       {{x,2},not_live}:
 ```
+{% endraw %}
 
 #### Friend and foe
 

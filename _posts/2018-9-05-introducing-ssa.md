@@ -340,7 +340,7 @@ The first interesting optimization for our example is the
 matching instructions with an `is_tagged_tuple` instruction.
 Here is the part of the code that will be optimized:
 
-<pre class="highlight">
+<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
     0:
       @ssa_bool:6 = bif:is_tuple _0
       br @ssa_bool:6, label 7, <b>label 3</b>
@@ -364,7 +364,7 @@ a certain size (4 in this example) and with a certain first element
 If all conditions are fulfilled, the optimization is done in the second stage.
 Here is the code again, with the optimized part of the code highlighted:
 
-<pre class="highlight">
+<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
     function blog:foo(_0) {
     0:
       @ssa_bool:6 = <b>is_tagged_tuple _0, literal 4, literal tag</b>
@@ -404,7 +404,7 @@ instruction has been replaced with the more expensive
 The next optimization is a type analysis pass, which is implemented in
 the module [beam_ssa_type]. Here is the code after running `beam_ssa_type`:
 
-<pre class="highlight">
+<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
     function blog:foo(_0) {
     0:
       @ssa_bool:6 = is_tagged_tuple _0, literal 4, literal tag
@@ -449,7 +449,7 @@ used, and has no observable side effect, it can be deleted. The
 highlighted instructions in the code that follows was identified by
 the liveness analysis pass as unused:
 
-<pre class="highlight">
+<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
     function blog:foo(_0) {
     0:
       @ssa_bool:6 = is_tagged_tuple _0, literal 4, literal tag
@@ -483,7 +483,7 @@ the liveness analysis pass as unused:
 
 Because those expressions don't have any side effects, they can be deleted:
 
-<pre class="highlight">
+<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
     function blog:foo(_0) {
     0:
       @ssa_bool:6 = is_tagged_tuple _0, literal 4, literal tag
@@ -563,7 +563,7 @@ to `{x,0}`.
 It happens that for this particular example, the OTP 21 compiler will produce
 slightly better code:
 
-<pre class="highlight">
+<pre class="highlight" style="font-family: 'Bitstream Vera Sans Mono','Courier', monospace;">
     {test,is_tagged_tuple,{f,1},[{x,0},4,{atom,tag}]}.
     {test_heap,3,1}.
     {get_tuple_element,{x,0},1,<b>{x,2}</b>}.
