@@ -86,7 +86,7 @@ It will be used in the stack backtrace if the following instruction fails.
 
 The `bif` instruction calls the given guard BIF, `element/2` in this case.
 The `{f,0}` operand gives the action to take if the `element/2` fails. The number
-`0` is a a special case, meaning that a `badarg` exception should be raised if the
+`0` is a special case, meaning that a `badarg` exception should be raised if the
 call of `element/2` fails.
 
 ## A failing BIF call in a guard
