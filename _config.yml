@@ -13,6 +13,7 @@ description: The Erlang/OTP team at Ericsson, the implementors and maintainers o
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: /images/erlang.png
 
+future: false
 
 #
 # Flags below are optional
