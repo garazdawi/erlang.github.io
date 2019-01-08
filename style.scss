@@ -110,6 +110,45 @@ img {
   max-width: 100%;
 }
 
+table td, table th {
+    border: 1px solid #dfe2e5;
+    padding: 6px 13px;
+}
+
+table tr:nth-child(2n) {
+    background-color: #f6f8fa;
+}
+
+table tr {
+    background-color: #fff;
+    border-top: 1px solid #c6cbd1;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: rgb(198, 203, 209);
+}
+
+table th {
+    font-weight: 600;
+}
+
+table thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+table {
+    display: table;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-color: grey;
+}
+
 // Fixes images in popup boxes from Google Translate
 .gmnoprint img {
   max-width: none;
