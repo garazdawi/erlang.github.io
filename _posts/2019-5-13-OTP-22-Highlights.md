@@ -72,7 +72,7 @@ i(A) ->
 
 The new compiler is able to detect the type of the term passed as an argument to
 `h/1` and also the return value of `h/1` so it can eliminate the record checks
-completely. Looking at the assemly (produced by `erlc -S`) of the `h/1` function we get:
+completely. Looking at the BEAM code (produced by `erlc -S`) of the `h/1` function we get:
 
 OTP 21:
 ```
@@ -90,10 +90,10 @@ OTP 22:
     {test_heap,3,1}.
 ```
 
-The `is_tagged_tuple` has been completely eliminated and as an added bonus
+The `is_tagged_tuple` instruction has been completely eliminated and as an added bonus
 one `get_tuple_element` was also removed.
 
-This is however only the start and we are already looking into making even
+However, this is only the start and we are already looking into making even
 better optimizations for OTP 23, building on top of the SSA rewrite.
 
 # Socket
@@ -103,9 +103,10 @@ The idea behind this API is to have a stable intermediary API that users can use
 to create features that are not part of the higher-level gen APIs. We will also be using
 this API to re-implement the higher-level gen APIs in OTP 23.
 
-Another aspect of the new socket API is that it can be used to quite greatly reduce the
-overhead that is inherent with using ports. I wrote [this](https://gist.github.com/garazdawi/cd8ea31acb3284bfc526ae4b1bcb67af)
-small microbenchmark called gen\_tcp2 to see what the difference could be.
+Another aspect of the new socket API is that it can be used to greatly reduce the
+overhead that is inherent with using ports. I wrote this
+[microbenchmark](https://gist.github.com/garazdawi/cd8ea31acb3284bfc526ae4b1bcb67af)
+called gen\_tcp2 to see what the difference could be.
 
 ```
 Erlang/OTP 22 [erts-10.4] [source] [64-bit]
@@ -187,7 +188,7 @@ LOpts = [{certfile, "tls_server_cert.pem"},
 {ok, S} = ssl:handshake(CSock).
 ```
 
-And use `OpenSSL`'s client to connect:
+And use the `OpenSSL` client to connect:
 
     openssl s_client -debug -connect localhost:8443 \
       -CAfile tls_client_cacerts.pem \
@@ -202,12 +203,16 @@ and this in `OpenSSL`:
     New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
 
 which means that we have successfully created a new `TLSv1.3` connection. If you want to
-duplicate what I've done you can follow the instructions
-[here](https://gist.github.com/garazdawi/062627973b2887e50e9c9bbc86740b63).
+duplicate what I've done you can follow 
+[these instructions](https://gist.github.com/garazdawi/062627973b2887e50e9c9bbc86740b63).
 
 # Counter/Atomics and persistent_terms
 
-Three new modules, `counters`, `atomics` and `persistent_term`, were added in OTP 21.2.
+Three new modules,
+[`counters`](http://erlang.org/doc/man/counters.html),
+[`atomics`](http://erlang.org/doc/man/atomics.html), and
+[`persistent_term`](http://erlang.org/doc/man/persistent_term.html),
+were added in OTP 21.2.
 These modules make it possible for the user to access low-level primitives of the
 runtime to make some spectacular performance improvements.
 
@@ -222,7 +227,7 @@ but at the cost of making updates very expensive. In Erlang/OTP we so far use it
 to optimize [logger backends](https://github.com/erlang/otp/blob/9c8075413728e3be373d7dff2a7168b3983e0be3/lib/kernel/src/logger_proxy.erl#L45)
 but the use cases are numerous.
 
-A fun (and possibly useful) use-case for `atomics` is to create a
+A fun (and possibly useful) use case for `atomics` is to create a
 [shared mutable bit-vector](https://gist.github.com/garazdawi/48f1284c0d533ab5a39eeac6f8ff99a0).
 So, now we can spawn 100 processes and play flip that bit with each other:
 
