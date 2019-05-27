@@ -158,12 +158,12 @@ further optimizations have been done in [PR2190](https://github.com/erlang/otp/p
 # TLS Improvements
 
 In OTP 21.3 the culmination of many optimizations in the ssl application was released.
-For certain use-cases, the overhead of a using TSL has been significantly reduced. For
-instance in this TSL distribution benchmark:
+For certain use-cases, the overhead of a using TLS has been significantly reduced. For
+instance in this TLS distribution benchmark:
 
 ![TLS Dist OTP 22 benchmark](../images/tls_dist_until_opt.png)
 
-The bytes per second that the Erlang distribution over TSL is able to send has been
+The bytes per second that the Erlang distribution over TLS is able to send has been
 increased from 17K to about 80K, so more than 4 times as much data as before. The
 throughput gain above is mostly due to better batching of distribution messages
 which makes it so that ssl does not have to add a lot of padding to each message
