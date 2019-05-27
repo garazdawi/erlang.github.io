@@ -130,7 +130,7 @@ very good for performance.
 # Write concurrency in `ordered_sets`
 
 [PR1952](https://github.com/erlang/otp/pull/1952) contributed by Kjell Winblad from
-Uppsala University makes it possible to do updated in parallel on `ets` tables of
+Uppsala University makes it possible to do updates in parallel on `ets` tables of
 the type `ordered_set`. This has greatly increased the scalability of such ets
 tables that are the base for many applications, for instance,
 [pg2](http://erlang.org/doc/man/pg2.html) and the default [ssl session cache](http://erlang.org/doc/man/ssl_session_cache_api.html).
