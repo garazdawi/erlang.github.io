@@ -129,31 +129,35 @@ very good for performance.
 
 # Write concurrency in `ordered_sets`
 
-[PR1952](https://github.com/erlang/otp/pull/1952) contributed by Kjell Winblad from
-Uppsala University makes it possible to do updates in parallel on `ets` tables of
-the type `ordered_set`. This has greatly increased the scalability of such ets
-tables that are the base for many applications, for instance,
-[pg2](http://erlang.org/doc/man/pg2.html) and the default [ssl session cache](http://erlang.org/doc/man/ssl_session_cache_api.html).
+[PR1952](https://github.com/erlang/otp/pull/1952) contributed by Kjell
+Winblad from Uppsala University makes it possible to do updates in
+parallel on `ets` tables of the type `ordered_set`. This together with
+other improvements by Kjell Winblad and Sverker Eriksson
+([PR1997](https://github.com/erlang/otp/pull/1997) and
+[PR2190](https://github.com/erlang/otp/pull/2190)) has greatly
+increased the scalability of such ets tables that are the base for
+many applications, for instance,
+[pg2](http://erlang.org/doc/man/pg2.html) and the default [ssl session
+cache](http://erlang.org/doc/man/ssl_session_cache_api.html).
 
 ![Ordered Set Write Concurrency OTP 22 benchmark](../images/ordered_set_write_conc.png)
 
-In the benchmark above we can see that when enabling `write_concurrency` on an
-`ordered_set` table the operations per seconds possible on a 64 core machine
-is almost increased five times when `write_concurrency` is enabled. How much
-your application gains from this will depend on the ratio of read and write operations
-into the `ordered_set`. You can see the results of many more benchmarks
-[here](http://winsh.me/ets_catree_benchmark/ets_ca_tree_benchmark_results.html).
+In the benchmark above we can see that on an `ordered_set` table the
+operations per seconds possible on a 64 core machine has increased
+dramatically between OTP 21 and OTP 22. You can see a description of
+the benchmark and the results of many more benchmarks
+[here](/bench/ets_ord_set_21_vs_22/21_vs_22.html).
 
-The data structure used to enable `write_concurrency` in the `ordered_set` is called
-contention adaptive search tree. In a nutshell, the data structure keeps a shadow
-tree that represents the locks needed to read or write a term in the tree. When
-conflicts between multiple writers happen, the shadow tree is updated to have
-more fine-grained locks for specific branches of the tree. You can read more about
-the details of the algorithm in [A Contention Adapting Approach to Concurrent Ordered Sets](http://www.it.uu.se/research/group/languages/software/ca_tree/catree_proofs.pdf).
-
-The original PR had a few places where it still had to fall back to run sequentially,
-but that has been fixed in [PR1997](https://github.com/erlang/otp/pull/1997) and then
-further optimizations have been done in [PR2190](https://github.com/erlang/otp/pull/2190).
+The data structure used to enable `write_concurrency` in the
+`ordered_set` is called contention adaptive search tree. In a
+nutshell, the data structure keeps a shadow tree that represents the
+locks needed to read or write a term in the tree. When conflicts
+between multiple writers happen, the shadow tree is updated to have
+more fine-grained locks for specific branches of the tree. You can
+read more about the details of the algorithm in [A Contention Adapting
+Approach to Concurrent Ordered
+Sets](https://www.sciencedirect.com/science/article/pii/S0743731517303052)
+([PDF](http://www.it.uu.se/research/group/languages/software/ca_tree/catree_proofs.pdf)).
 
 # TLS Improvements
 
