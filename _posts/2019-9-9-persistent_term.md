@@ -6,7 +6,7 @@ author: Lukas Larsson
 ---
 
 This blog post will go through three different uses of [persistent_term](http://erlang.org/doc/man/persistent_term.html)
-that I have used since it's release and explain a bit why they work so well with
+that I have used since its release and explain a bit why they work so well with
 [persistent\_term](http://erlang.org/doc/man/persistent_term.html).
 
 # Global counters
@@ -51,9 +51,9 @@ cnt_read(Counter) ->
 ```
 
 This gives a performance degradation of about 20%, so not really what we want.
-However if we place the counter in [persistent\_term](http://erlang.org/doc/man/persistent_term.html)
-like the code below we get a performance increase by about 140%, so that is much
-more inline with what we wanted.
+However, if we place the counter in [persistent\_term](http://erlang.org/doc/man/persistent_term.html)
+like the code below we get a performance increase by about 140%, which is much
+more in line with what we wanted.
 
 ```
 cnt_pt_incr(Counter) ->
@@ -80,11 +80,11 @@ by the GC. This means that for `cnt_incr` we actually have 3 counters that are m
 each call. First we increment the reference count on the counter when copying from ets, then
 we update the actual counter and then eventually we decrement the reference counter. If we
 use [persistent\_term](http://erlang.org/doc/man/persistent_term.html), the term is never
-copied so we don't have to update any reference counters instead we just have to update the
+copied so we don't have to update any reference counters, instead we just have to update the
 actual counter.
 
-Placing the counter in [persistent\_term](http://erlang.org/doc/man/persistent_term.html)
-is not trouble free however. In order to delete or replace the counter reference in
+However, placing the counter in [persistent\_term](http://erlang.org/doc/man/persistent_term.html)
+is not trouble free. In order to delete or replace the counter reference in
 [persistent\_term](http://erlang.org/doc/man/persistent_term.html) we have to do a global
 GC which depending on the system could be very very expensive.
 
@@ -119,7 +119,7 @@ entirety to the calling process. Which in turn means that we don't have to do a 
 GC when replacing the value.
 
 When doing this we have to be very careful so that the value does not become a heap value
-as the cost of doing an update would explode. It does however work great for logger and
+as the cost of doing an update would explode. However, it works great for logger and
 has reduced the overhead of a ?LOG_INFO call by about 65% when no logging should be done.
 
 # Large constant data
@@ -137,11 +137,12 @@ seconds for it to finish. This means that about every 10 minutes the server free
 10 seconds and we get to experience the joy of being Java programmers for a while.
 
 Being a VM developer I've always thought the solution to this problem is to implement
-either an incremental GC or at least a mark and sweep GC for large heaps. However the
-ticket tool server has never been of high enough priority to make me spend a year of two
+either an incremental GC or at least a mark and sweep GC for large heaps. However, the
+ticket tool server has never been of high enough priority to make me spend a year or two
 rewriting the GC.
 
-So, two weeks ago I decided to take a look and instead I used [persistent\_term](http://erlang.org/doc/man/persistent_term.html)
+So, two weeks ago I decided to take a look and instead I used
+[persistent\_term](http://erlang.org/doc/man/persistent_term.html)
 to move the data from the heap into the literal area instead. This was possible to do because
 I know that the majority of tickets are only searched and never changed, so they will
 remain in the literal area forever, while the tickets that do get edited move onto the
@@ -156,5 +157,5 @@ handle_info(timeout, State) ->
 
 This small change puts the entire gen_server state into the literal area and then
 any changes done to it will pull the data into the heap. This dropped the GC pauses
-down to be non noticeable and took considerable less time to implement than a new GC
+down to be non-noticeable and took considerable less time to implement than a new GC
 algorithm.
