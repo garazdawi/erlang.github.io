@@ -71,6 +71,7 @@ This is good for two reasons:
 
 1) The amount of garbage will decrease. In my benchmarks the amount of garbage generated
 by `cnt_incr` is 6 words while both `ets_incr` and `cnt_pt_incr` create 3 words.
+
 2) No reference counts have to be modified. What I mean by this is that the
 [counters](http://erlang.org/doc/man/counters.html) reference
 is what is called a magic reference or nif resource. These references work much in the same
