@@ -18,7 +18,7 @@ OTP-22 the best way that I know of to get the best performance is by using a str
 ets tables. i.e. something like the code below:
 
 {% raw %}
-```
+```erlang
 incr(Counter) ->
   ets:update_counter(?MODULE,{Counter,erlang:system_info(scheduler_id)},1).
 
@@ -42,7 +42,7 @@ The remaining problem then is finding the reference to the counter. We could put
 into ets and then do an [ets:lookup\_element/3](http://erlang.org/doc/man/ets.html#lookup_element-3)
 when updating a counter.
 
-```
+```erlang
 cnt_incr(Counter) ->
     counters:add(ets:lookup_element(?MODULE,Counter,2),1,1).
 
@@ -55,7 +55,7 @@ However, if we place the counter in [persistent\_term](http://erlang.org/doc/man
 like the code below we get a performance increase by about 140%, which is much
 more in line with what we wanted.
 
-```
+```erlang
 cnt_pt_incr(Counter) ->
     counters:add(persistent_term:get({?MODULE,Counter}),1,1).
 
@@ -148,7 +148,7 @@ I know that the majority of tickets are only searched and never changed, so they
 remain in the literal area forever, while the tickets that do get edited move onto the
 heap of the ticket server. Basically my code change was this:
 
-```
+```erlang
 handle_info(timeout, State) ->
   persistent_term:put(?MODULE,State),
   erlang:start_timer(60 * 60 * 1000, self(), timeout),
