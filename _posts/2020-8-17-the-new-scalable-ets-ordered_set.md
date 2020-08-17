@@ -154,8 +154,7 @@ going through an example:
    nodes occupy needs to be reclaimed, but this can not happen directly
    after they have got spliced-out as some threads might still be
    reading them. The Erlang run-time system has a mechanism called
-   [delayed
-   dealloc](https://github.com/erlang/otp/blob/d6285b0a347b9489ce939511ee9a979acd868f71/erts/emulator/internal_doc/DelayedDealloc.md),
+   [thread progress](https://github.com/erlang/otp/blob/d6285b0a347b9489ce939511ee9a979acd868f71/erts/emulator/internal_doc/ThreadProgress.md),
    which the ETS CA tree implementation uses to reclaim these nodes
    safely.
    
