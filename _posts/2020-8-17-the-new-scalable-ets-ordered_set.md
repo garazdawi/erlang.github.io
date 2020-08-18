@@ -130,7 +130,7 @@ going through an example:
 5. The following picture shows the CA tree after the fourth split:
    
    
-   ![alt text](/images/ca_tree/ca_tree_5.png "Forth Split Contention Adapting Search Tree")
+   ![alt text](/images/ca_tree/ca_tree_5.png "Fourth Split Contention Adapting Search Tree")
 6. The following picture shows the CA tree after the fifth split:
    
    
