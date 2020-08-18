@@ -243,7 +243,7 @@ accessed from multiple processes in parallel. Still, turning off
 `write_concurrency` might be better if you mainly access the table
 sequentially.
 
-## A Note on Erlang/OTP 23 and ETS Decentralized Counters
+## A Note on Erlang/OTP 23 and Decentralized Counters
 
 A new ETS scalability optimization that optionally decentralizes the
 counters used by ETS tables was introduced in the Erlang/OTP 23
