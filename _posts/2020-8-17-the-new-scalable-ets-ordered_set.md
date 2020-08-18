@@ -24,13 +24,13 @@ Erlang/OTP 22+ installed.
 The escript measures the time it takes for `P` Erlang processes to
 insert `N` integers into an `ordered_set` ETS table, where `P` and `N`
 are parameters to the escript. The CA tree is only utilized when the
-ETS table options `ordred_set` and `{write_concurrency, true}` are
+ETS table options `ordered_set` and `{write_concurrency, true}` are
 active. One can, therefore, easily compare the new data structure's
 performance with the old one (an [AVL tree][AVLTree] protected by a
 single readers-writer lock). The `write_concurrency` option had no
 effect on `ordered_set` tables before the release of Erlang/OTP 22.
 
-I got the following results when I ran the escript on my laptop with
+We get the following results when running the escript on a developer laptop with
 two cores (Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz):
 
 {% highlight console %}
@@ -53,7 +53,7 @@ Time: 1.66509 seconds
 We see that in this particular benchmark, the CA tree has superior
 scalability to the old data structure. The benchmark ran about twice
 as fast with the new data structure and four processes as with the old
-data structure and one process (remember that the machine only has two
+data structure and one process (the machine only has two
 cores). We will look at the performance and scalability of the new CA
 tree-based implementation in greater detail later after describing how
 the CA tree works.
@@ -127,7 +127,7 @@ going through an example:
    
    
    ![alt text](/images/ca_tree/ca_tree_4.png "Third Split Contention Adapting Search Tree")
-5. The following picture shows the CA tree after the forth split:
+5. The following picture shows the CA tree after the fourth split:
    
    
    ![alt text](/images/ca_tree/ca_tree_5.png "Forth Split Contention Adapting Search Tree")
