@@ -185,8 +185,6 @@ page](http://blog.erlang.org/bench/ets_ord_set_21_vs_22/21_vs_22.html).
 
 ![alt text](/bench/ets_ord_set_21_vs_22/plot_3.png "benchmark results")
 
-![alt text](/bench/ets_ord_set_21_vs_22/plot_4.png "benchmark results")
-
 ![alt text](/bench/ets_ord_set_21_vs_22/plot_5.png "benchmark results")
 
 ![alt text](/bench/ets_ord_set_21_vs_22/plot_6.png "benchmark results")
@@ -194,6 +192,8 @@ page](http://blog.erlang.org/bench/ets_ord_set_21_vs_22/21_vs_22.html).
 ![alt text](/bench/ets_ord_set_21_vs_22/plot_7.png "benchmark results")
 
 ![alt text](/bench/ets_ord_set_21_vs_22/plot_8.png "benchmark results")
+
+![alt text](/bench/ets_ord_set_21_vs_22/plot_4.png "benchmark results")
 
 We see that the throughput of the CA tree-based `ordered_set` (OTP-22)
 improves when we add cores all the way up to 64 cores, while the old
@@ -205,7 +205,8 @@ cores is mainly caused by increased communication overhead when more
 cores try to acquire the same lock and by the fact that the competing
 cores frequently invalidate each other's cache lines.
 
-The graph for the 100% lookups scenario looks a bit strange at first
+The graph for the 100% lookups scenario (the last graph in the list of graphs above)
+looks a bit strange at first
 sight. Why does the CA tree scale so much better than the old
 implementation in this scenario? The answer is almost impossible to
 guess without knowing the implementation details of the `ordered_set`
@@ -214,18 +215,14 @@ active when `write_concurrency` is off) has an optimization that
 mainly improves usage scenarios where a single process iterates over
 items of the table, for example, with a sequence of calls to the
 `ets:next/2` function. This optimization keeps a static stack per
-table. Some operations (e.g., `ets:next/2`) use this stack to reduce
+table. Some operations use this stack to reduce
 the number of tree nodes that need to be traversed. For example, the
 `ets:next/2` operation does not need to recreate the stack, if the top
 of the stack contains the same key as the one passed to the
-operation. Similarly, `ets:lookup/2` has an optimization that makes
-the second of two subsequent calls to `ets:lookup/2` with the same key
-a constant time operation (see [this code
-line][ets_lookup_stack_opt]). As there is only one static stack per
+operation (see [here][ets_next_stack_opt]). As there is only one static stack per
 table and potentially many readers (due to the readers-writer lock),
 the static stack has to be reserved by the thread that is currently
-using it. If the static stack is already in use when a thread wants to
-get hold of it, a dynamic stack is allocated instead. Unfortunately,
+using it. Unfortunately,
 the static stack handling is a scalability bottleneck in scenarios
 like the one with 100% lookups above. The CA tree implementation does
 not have this type of optimization, so it does not suffer from this
@@ -301,3 +298,4 @@ granularities.
 [decent_ctrs_pull2]: https://github.com/erlang/otp/pull/2229
 [decent_ctrs_bench]: http://winsh.me/ets_catree_benchmark/azure_D64s_decent_ctrs/hash_decentralized_ctrs.html
 [ets_ca_tree_code]: https://github.com/erlang/otp/blob/4ca912b859f779d6d9b235ea0cf6fb7662edcc59/erts/emulator/beam/erl_db_catree.c
+[ets_next_stack_opt]: https://github.com/erlang/otp/blob/master/erts/emulator/beam/erl_db_tree.c#L3084
