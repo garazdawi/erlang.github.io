@@ -185,13 +185,13 @@ page](http://blog.erlang.org/bench/ets_ord_set_21_vs_22/21_vs_22.html).
 
 ![alt text](/bench/ets_ord_set_21_vs_22/plot_3.png "benchmark results")
 
-![alt text](/bench/ets_ord_set_21_vs_22/plot_5.png "benchmark results")
-
-![alt text](/bench/ets_ord_set_21_vs_22/plot_6.png "benchmark results")
-
 ![alt text](/bench/ets_ord_set_21_vs_22/plot_7.png "benchmark results")
 
 ![alt text](/bench/ets_ord_set_21_vs_22/plot_8.png "benchmark results")
+
+![alt text](/bench/ets_ord_set_21_vs_22/plot_5.png "benchmark results")
+
+![alt text](/bench/ets_ord_set_21_vs_22/plot_6.png "benchmark results")
 
 ![alt text](/bench/ets_ord_set_21_vs_22/plot_4.png "benchmark results")
 
@@ -232,7 +232,8 @@ mainly sequentially accessed. One example of when the old
 implementation (that still can be used by setting the
 `write_concurrency` option to false) performs better is the single
 process case of the 10% `insert`, 10% `delete`, 40% `lookup` and 40%
-`nextseq1000` (a sequence of 1000 `ets:next/2` calls) scenario above.
+`nextseq1000` (a sequence of 1000 `ets:next/2` calls) scenario
+(the second last graph in the list of graphs above).
 
 Therefore, we can conclude that that turning on `write_concurrency`
 for an `ordered_set` table is probably a good idea if the table is
