@@ -195,21 +195,70 @@ page](http://blog.erlang.org/bench/ets_ord_set_21_vs_22/21_vs_22.html).
 
 ![alt text](/bench/ets_ord_set_21_vs_22/plot_8.png "benchmark results")
 
-We see that the throughput of the CA tree-based `ordered_set` (OTP-22) improves
-when we add cores all the way up to 64 cores, while the old
-implementation's (OTP-21) throughput often gets worse when more processes are
-added. The old implementation's write operations are serialized as the
-data structure is protected by a single readers-writer lock. The
-slowdown of the old version when adding more cores is caused by
-increased communication overhead when more cores try to acquire the
-same lock and by the fact that the competing cores frequently
-invalidate each other's cache lines.
+We see that the throughput of the CA tree-based `ordered_set` (OTP-22)
+improves when we add cores all the way up to 64 cores, while the old
+implementation's (OTP-21) throughput often gets worse when more
+processes are added. The old implementation's write operations are
+serialized as the data structure is protected by a single
+readers-writer lock. The slowdown of the old version when adding more
+cores is mainly caused by increased communication overhead when more
+cores try to acquire the same lock and by the fact that the competing
+cores frequently invalidate each other's cache lines.
 
+The graph for the 100% lookups scenario looks a bit strange at first
+sight. Why does the CA tree scale so much better than the old
+implementation in this scenario? The answer is almost impossible to
+guess without knowing the implementation details of the `ordered_set`
+table type. The default `ordered_set` implementation (the one that is
+active when `write_concurrency` is off) has an optimization that
+mainly improves usage scenarios where a single process iterates over
+items of the table, for example, with a sequence of calls to the
+`ets:next/2` function. This optimization keeps a static stack per
+table. Some operations (e.g., `ets:next/2`) use this stack to reduce
+the number of tree nodes that need to be traversed. For example, the
+`ets:next/2` operation does not need to recreate the stack, if the top
+of the stack contains the same key as the one passed to the
+operation. Similarly, `ets:lookup/2` has an optimization that makes
+the second of two subsequent calls to `ets:lookup/2` with the same key
+a constant time operation (see [this code
+line][ets_lookup_stack_opt]). As there is only one static stack per
+table and potentially many readers (due to the readers-writer lock),
+the static stack has to be reserved by the thread that is currently
+using it. If the static stack is already in use when a thread wants to
+get hold of it, a dynamic stack is allocated instead. Unfortunately,
+the static stack handling is a scalability bottleneck in scenarios
+like the one with 100% lookups above. The CA tree implementation does
+not have this type of optimization, so it does not suffer from this
+scalability bottleneck. However, this also means that the old
+implementation may perform better than the new one when the table is
+mainly sequentially accessed. One example of when the old
+implementation (that still can be used by setting the
+`write_concurrency` option to false) performs better is the single
+process case of the 10% `insert`, 10% `delete`, 40% `lookup` and 40%
+`nextseq1000` (a sequence of 1000 `ets:next/2` calls) scenario above.
+
+Therefore, we can conclude that that turning on `write_concurrency`
+for an `ordered_set` table is probably a good idea if the table is
+accessed from multiple processes in parallel. Still, turning off
+`write_concurrency` might be better if you mainly access the table
+sequentially.
+
+## A Note on Erlang/OTP 23 and ETS Decentralized Counters
+
+A new ETS scalability optimization that optionally decentralizes the
+counters used by ETS tables was introduced in the Erlang/OTP 23
+release. You can read more about the decentralized counters
+optimization [here][decent_ctrs_pull1] and
+[here][decent_ctrs_pull2]. This optimization means that if you run the
+benchmark presented in the previous section on Erlang/OTP 23+, you
+will see even better scalability! You can find benchmark results
+comparing the scalability of the tables with and without decentralized
+counters [here][decent_ctrs_bench].
 
 ## Further Reading
 
 
-The following paper describes the CA tree and some optimizations in much more detail than this blog post. The paper also includes an experimental comparison with related data structures.
+The following paper describes the CA tree and some optimizations (of which some have not been applied to the ETS CA tree yet) in much more detail than this blog post. The paper also includes an experimental comparison with related data structures.
 
 * *[A Contention Adapting Approach to Concurrent Ordered Sets][jpdc_ca_tree] ([preprint][jpdc_ca_tree_preprint]). Journal of Parallel and Distributed Computing, 2018. Konstantinos Sagonas and Kjell Winblad*
 
@@ -221,7 +270,12 @@ The following paper, which discusses and evaluates a prototypical CA tree implem
 
 * *[More Scalable Ordered Set for ETS Using Adaptation][erlang_workshop] ([preprint][erlang_workshop_preprint]). In Thirteenth ACM SIGPLAN workshop on Erlang (2014). Konstantinos Sagonas and Kjell Winblad*
 
-It might also be interesting to look at the [author's Ph.D. thesis][kjell_phd_thesis] if you want to get more links to related work or want to know more about the motivation for concurrent data structures that adapt to contention.
+You can look directly at the [ETS CA tree source
+code][ets_ca_tree_code] if you are interested in specific
+implementation details. Finally, it might also be interesting to look
+at the [author's Ph.D. thesis][kjell_phd_thesis] if you want to get
+more links to related work or want to know more about the motivation
+for concurrent data structures that adapt to contention.
 
 ## Conclusion
 
@@ -242,3 +296,8 @@ granularities.
 [erlang_workshop_preprint]: http://winsh.me/papers/erlang_workshop_2014.pdf
 [AVLTree]: https://en.wikipedia.org/wiki/AVL_tree
 [kjell_phd_thesis]: http://uu.diva-portal.org/smash/record.jsf?pid=diva2%3A1220366&dswid=6575
+[ets_lookup_stack_opt]: https://github.com/erlang/otp/blob/4ca912b859f779d6d9b235ea0cf6fb7662edcc59/erts/emulator/beam/erl_db_tree.c#L3306
+[decent_ctrs_pull1]: https://github.com/erlang/otp/pull/2190
+[decent_ctrs_pull2]: https://github.com/erlang/otp/pull/2229
+[decent_ctrs_bench]: http://winsh.me/ets_catree_benchmark/azure_D64s_decent_ctrs/hash_decentralized_ctrs.html
+[ets_ca_tree_code]: https://github.com/erlang/otp/blob/4ca912b859f779d6d9b235ea0cf6fb7662edcc59/erts/emulator/beam/erl_db_catree.c
