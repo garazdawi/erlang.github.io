@@ -243,17 +243,17 @@ accessed from multiple processes in parallel. Still, turning off
 `write_concurrency` might be better if you mainly access the table
 sequentially.
 
-## A Note on Erlang/OTP 23 and Decentralized Counters
+## A Note on Decentralized Counters
 
-A new ETS scalability optimization that optionally decentralizes the
-counters used by ETS tables was introduced in the Erlang/OTP 23
-release. You can read more about the decentralized counters
-optimization [here][decent_ctrs_pull1] and
-[here][decent_ctrs_pull2]. This optimization means that if you run the
-benchmark presented in the previous section on Erlang/OTP 23+, you
-will see even better scalability! You can find benchmark results
-comparing the scalability of the tables with and without decentralized
-counters [here][decent_ctrs_bench].
+The CA tree implementation was not the only optimization introduced in
+Erlang/OTP 22, affecting the scalability of `ordered_set` with
+`write_concurrency`. An optimization that decentralized counters in
+`ordered_set` tables with `write_concurrency` turned on was also
+introduced in Erlang/OTP 22 (see [here][decent_ctrs_pull1]).  An
+option to enable the same optimization in all table types was
+introduced in Erlang/OTP 23 (see [here][decent_ctrs_pull2]). You can
+find benchmark results comparing the scalability of the tables with
+and without decentralized counters [here][decent_ctrs_bench].
 
 ## Further Reading
 
