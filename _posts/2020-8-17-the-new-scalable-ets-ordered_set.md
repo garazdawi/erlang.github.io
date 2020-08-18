@@ -160,6 +160,8 @@ going through an example:
    
    ![alt text](/images/ca_tree/ca_tree_8.png "Spliced-out base nodes and routing nodes have been reclaimed.")
 
+[Click here](/images/ca_tree/ca_tree_ani.gif) to see an animation of the example.
+
 ## Benchmark
 
 The performance of the new CA tree-based ETS `ordered_set`
