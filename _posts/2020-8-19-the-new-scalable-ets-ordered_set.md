@@ -207,35 +207,37 @@ cores is mainly caused by increased communication overhead when more
 cores try to acquire the same lock and by the fact that the competing
 cores frequently invalidate each other's cache lines.
 
-The graph for the 100% lookups scenario (the last graph in the list of graphs above)
-looks a bit strange at first
-sight. Why does the CA tree scale so much better than the old
-implementation in this scenario? The answer is almost impossible to
-guess without knowing the implementation details of the `ordered_set`
-table type. The default `ordered_set` implementation (the one that is
-active when `write_concurrency` is off) has an optimization that
-mainly improves usage scenarios where a single process iterates over
-items of the table, for example, with a sequence of calls to the
-`ets:next/2` function. This optimization keeps a static stack per
-table. Some operations use this stack to reduce
-the number of tree nodes that need to be traversed. For example, the
-`ets:next/2` operation does not need to recreate the stack, if the top
-of the stack contains the same key as the one passed to the
-operation (see [here][ets_next_stack_opt]). As there is only one static stack per
+The graph for the 100% lookups scenario (the last graph in the list of
+graphs above) looks a bit strange at first sight. Why does the CA tree
+scale so much better than the old implementation in this scenario? The
+answer is almost impossible to guess without knowing the
+implementation details of the `ordered_set` table type. First of all,
+the CA tree uses the same readers-writer lock implementation
+for its base node locks as the old implementation uses to protect the whole
+table. The difference is thus not due to any lock differences. The
+default `ordered_set` implementation (the one that is active when
+`write_concurrency` is off) has an optimization that mainly improves
+usage scenarios where a single process iterates over items of the
+table, for example, with a sequence of calls to the `ets:next/2`
+function. This optimization keeps a static stack per table. Some
+operations use this stack to reduce the number of tree nodes that need
+to be traversed. For example, the `ets:next/2` operation does not need
+to recreate the stack, if the top of the stack contains the same key
+as the one passed to the operation (see
+[here][ets_next_stack_opt]). As there is only one static stack per
 table and potentially many readers (due to the readers-writer lock),
 the static stack has to be reserved by the thread that is currently
-using it. Unfortunately,
-the static stack handling is a scalability bottleneck in scenarios
-like the one with 100% lookups above. The CA tree implementation does
-not have this type of optimization, so it does not suffer from this
-scalability bottleneck. However, this also means that the old
-implementation may perform better than the new one when the table is
-mainly sequentially accessed. One example of when the old
-implementation (that still can be used by setting the
+using it. Unfortunately, the static stack handling is a scalability
+bottleneck in scenarios like the one with 100% lookups above. The CA
+tree implementation does not have this type of optimization, so it
+does not suffer from this scalability bottleneck. However, this also
+means that the old implementation may perform better than the new one
+when the table is mainly sequentially accessed. One example of when
+the old implementation (that still can be used by setting the
 `write_concurrency` option to false) performs better is the single
 process case of the 10% `insert`, 10% `delete`, 40% `lookup` and 40%
-`nextseq1000` (a sequence of 1000 `ets:next/2` calls) scenario
-(the second last graph in the list of graphs above).
+`nextseq1000` (a sequence of 1000 `ets:next/2` calls) scenario (the
+second last graph in the list of graphs above).
 
 Therefore, we can conclude that that turning on `write_concurrency`
 for an `ordered_set` table is probably a good idea if the table is
