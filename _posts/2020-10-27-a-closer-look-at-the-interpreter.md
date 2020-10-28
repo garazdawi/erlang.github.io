@@ -32,7 +32,7 @@ With very few exceptions, the instructions are "pure" in the sense that they
 always do the same thing with the same input and that they only affect BEAM,
 either through changing the control flow or writing a result to a register.
 This makes the instructions very easy to read and reason about in isolation, so
-for the sake of brevity we we'll only have a look at one of them:
+for the sake of brevity we'll only have a look at one of them:
 
 ```c++
 is_nonempty_list(Label, Src) {
