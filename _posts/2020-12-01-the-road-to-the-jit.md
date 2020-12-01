@@ -6,7 +6,7 @@ author: Björn Gustavsson
 ---
 
 As long as Erlang has existed, there has always been the need and the
-ambition to make it faster. This blog is a history lesson that
+ambition to make it faster. This blog post is a history lesson that
 outlines the major Erlang implementations and attempts to improve
 the performance of Erlang.
 
@@ -100,8 +100,8 @@ it could beat BEAM/C in speed.
 ### HiPE
 
 [HiPE][hipe] (The High-Performance Erlang Project) was a research
-project at Uppsala University running for many years starting around
-1996. It was "aimed at efficiently implementing concurrent programming
+project at Uppsala University running for many years starting
+around 1996. It was "aimed at efficiently implementing concurrent programming
 systems using message-passing in general and the concurrent functional
 language Erlang in particular".
 
