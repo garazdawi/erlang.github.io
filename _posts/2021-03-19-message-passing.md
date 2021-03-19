@@ -29,14 +29,16 @@ sent. In other words, if process `A` sends signal `1` and then `2` to process
 Why is this important? Consider the request-response idiom:
 
 ```erlang
-%% Send a monitor signal to `Pid`, requesting a 'DOWN' message when `Pid` dies.
+%% Send a monitor signal to `Pid`, requesting a 'DOWN' message
+%% when `Pid` dies.
 Mref = monitor(process, Pid),
 %% Send a message signal to `Pid` with our `Request`
 Pid ! {self(), Mref, Request},
 receive
     {Mref, Response} ->
-        %% Send a demonitor signal to `Pid`, and remove the corresponding
-        %% 'DOWN' message that might have arrived in the meantime.
+        %% Send a demonitor signal to `Pid`, and remove the
+        %% corresponding 'DOWN' message that might have
+        %% arrived in the meantime.
         erlang:demonitor(Mref, [flush]),
         {ok, Response};
     {'DOWN', Mref, _, _, Reason} ->
@@ -186,17 +188,17 @@ $ erlc +recv_opt_info example.erl
 -export([t/2]).
 
 t(Pid, Request) ->
-    %% example.erl:5: Warning: OPTIMIZED: reference used to mark a message
-    %%                                    queue position
+    %% example.erl:5: OPTIMIZED: reference used to mark a 
+    %%                           message queue position
     Mref = monitor(process, Pid),
     Pid ! {self(), Mref, Request},
-    %% example.erl:7: Warning: INFO: passing reference created by monitor/2
-    %%                               at example.erl:5
+    %% example.erl:7: INFO: passing reference created by
+    %%                      monitor/2 at example.erl:5
     await_result(Mref).
 
 await_result(Mref) ->
-    %% example.erl:10: Warning: OPTIMIZED: all clauses match reference in
-    %%                                     function parameter 1
+    %% example.erl:10: OPTIMIZED: all clauses match reference
+    %%                            in function parameter 1
     receive
         {Mref, Response} ->
             erlang:demonitor(Mref, [flush]),
