@@ -1,7 +1,7 @@
 ---
 layout: post
 title: A few notes on message passing
-tags: BEAM erts jit
+tags: erts messages signals
 author: John Högberg
 ---
 
