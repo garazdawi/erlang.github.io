@@ -11,7 +11,8 @@ additions to Erlang/OTP that I am most excited about!
 
 Erlang/OTP 24 includes contributions from 60+ external contributors totalling
 1390 commits changing 0.5 million(!) lines of code. Though I'm not sure the line
-number should count as we vendored all of [AsmJit].
+number should count as we vendored all of [AsmJit] and re-generated the wxwidget
+support.
 
 You can download the readme describing the changes here: [Erlang/OTP 24 Readme].
 Or, as always, look at the release notes of the application you are interested in.
@@ -25,6 +26,7 @@ This years highlights are:
 * [EEP-48: Documentation chunks for edoc](#eep-48-documentation-chunks-for-edoc)
 * [gen_tcp socket nifs](#gen_tcp-socket-nifs)
 * [EEP-56: Supervisor automatic shutdown](#EEP-56-supervisor-automatic-shutdown)
+* [Edwards-curve Digital Signature Algorithm](#edwards-curve-digital-signature-algorithm)
 
 [about 10 years]: https://vimeo.com/44231138
 [Erlang/OTP 24 Readme]: http://erlang.org/download/otp_src_24.0.readme
@@ -48,12 +50,11 @@ A lot has already been said about it:
 and even before released the WhatsApp team has [shown what it is capable of].
 
 However, besides the performance gains that the JIT brings, what I am the most
-excited about is the benefits that come with running native code instead of
-interpreting. What I'm talking about is the native code tooling that now
-becomes available to all Erlang programmers, such as integration with [perf]
-and [gdb].
+excited about is the benefits that come with running native code
+instead of interpreting. What I'm talking about is the native code tooling that
+now becomes available to all Erlang programmers, such as integration with [perf].
 
-As an example, when building a dialyzer plt of a small core of Erlang the
+As an example, when building a dialyzer plt of a small core of Erlang, the
 previous way to profile would be via something like [eprof].
 
 ```erlang
@@ -83,7 +84,7 @@ Total:                    174708211  100.00% 44719837 [      0.26]
 
 In Erlang/OTP 24 we can get the same result without having to pay the pretty
 steep cost of profiling with eprof. When running the same analysis as above
-using perf it takes roughly 1.3 seconds to run.
+using [perf] it takes roughly 1.3 seconds to run.
 
 ```sh
 $ ERL_FLAGS="+JPperf true" perf record dialyzer --build_plt --apps erts
@@ -98,11 +99,12 @@ $ hotspot perf.data
 
 ![alt text](/images/hotspot-dialyzer.png "Hotspot dialyzer")
 
-and we can see that we get roughly the same result as when using `eprof`, though
-interestingly not exactly the same.
+In the above we can see that we get roughly the same result as when using
+`eprof`, though interestingly not exactly the same. I'll leave the whys of
+this up to the reader to find out :)
 
-With this little overhead when profiling, scenarious that previous would take way
-too long to run when profiling can be run. For those brave enough it might even
+With this little overhead when profiling, we can run scenarious that previous
+would take too long to run when profiling. For those brave enough it might even
 be possible to run always on profiling in production!
 
 The journey with what can be done with [perf] has only started. In [PR-4676] we
@@ -122,8 +124,9 @@ source code lines instead of only functions when using [perf report] and
 
 # Improved error messages #
 
-Two great new features have been added to help the user understand why
-something has failed.
+Erlang tends to get a bad reputation for the error messages that it produces.
+Two great new features have been added to help the user understand why something
+has failed.
 
 ## Column number in warnings and errors ##
 
@@ -143,7 +146,9 @@ you would in Erlang/OTP 23 and earlier get:
 $ erlc t.erl
 t.erl:6: only association operators '=>' are allowed in map construction
 ```
+
 however in Erlang/OTP 24 you now also get the following printout:
+
 ```
 $ erlc test.erl
 t.erl:6:16: only association operators '=>' are allowed in map construction
@@ -153,8 +158,7 @@ t.erl:6:16: only association operators '=>' are allowed in map construction
 
 This behaviour also extends into most of the Erlang code editors so that
 when you use VSCode or Emacs through [Erlang LS] or [flycheck] you also
-get a narrower warning/error indicator, for example in Emacs using
-[Erlang LS].
+get a narrower warning/error indicator, for example in Emacs using [Erlang LS].
 
 ![alt text](/images/column-numbers-highlight.png "Emacs columns numbers with Erlang-LS")
 
@@ -175,12 +179,12 @@ have given very crypting error messages.
         called as element({a,b,c},1)
 ```
 
-In the example above, the only thing we really know is that one or more
-of the arguments are invalid, but without checking [the documentation](https://erlang.org/doc/man/erlang.html#element-2)
-there is no way of knowing. This is especially a problem for BIFs where
-the arguments may fail for different reasons depending on factors not
-visible in the arguments. For example in the `ets:update_counter` call
-below:
+In the example above, the only thing we really know is that one or more of the
+arguments are invalid, but without checking
+[the documentation](https://erlang.org/doc/man/erlang.html#element-2)
+there is no way of knowing. This is especially a problem for BIFs where the
+arguments may fail for different reasons depending on factors not visible in the
+arguments. For example in the `ets:update_counter` call below:
 
 ```erlang
 > ets:update_counter(table, k, 1).
@@ -500,3 +504,30 @@ nor risking dead-locking itself during termination.
 [ssh]: https://erlang.org/doc/man/ssh.html
 [EEP-56]: https://www.erlang.org/erlang-enhancement-proposals/eep-0056.html
 [supervisor:terminate_child/2]: https://erlang.org/doc/man/supervisor.html#terminate_child-2
+
+# Edwards-curve Digital Signature Algorithm #
+
+With Erlang/OTP 24 comes support for [EdDSA] certificates. `EdDSA` can be
+used when connecting to or acting as a TLS 1.3 client/server. `EdDSA` is a
+type of [eliptic curve signature algorithm] that can be used for secure
+communication. The security of `ECDSA` relies on a
+[strong cryptographically secure random number] which can cause issues when
+the random number is by mistake not secure enough, as has been the case in several
+uses of ECDSA (none of them in Erlang as far as we know :). `EdDSA` does not
+rely on a strong random number to be secure. This means that when you are using
+EdDSA, the communication is secure even if your random number generator is not.
+
+Despite the added security, `EdDSA` is claimed to be faster than other eliptic
+curve signature algorithms. If you have [OpenSSL] 1.1.1 or later, then as of
+Erlang/OTP 24 you will have access to this algorithm!
+
+```erlang
+> crypto:supports(curves).
+[...
+  c2tnb359v1, c2tnb431r1, ed25519, ed448, ipsec3, ipsec4
+ ...]                     ^        ^
+```
+
+[EdDSA]: https://datatracker.ietf.org/doc/html/rfc8032
+[OpenSSL]: https://www.openssl.org/
+[strong cryptographically secure random number]: http://erlang.org/doc/man/crypto.html#strong_rand_bytes-1
