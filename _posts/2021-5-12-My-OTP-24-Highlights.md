@@ -10,9 +10,11 @@ in the making. [As] is [tradition] by [now], this blog post will go through the
 additions to Erlang/OTP that I am most excited about!
 
 Erlang/OTP 24 includes contributions from 60+ external contributors totalling
-1390 commits changing 0.5 million(!) lines of code. Though I'm not sure the line
-number should count as we vendored all of [AsmJit] and re-generated the wxWidgets
-support.
+1400+ commits, 300+ PRs and changing 0.5 million(!) lines of code. Though I'm not
+sure the line number should count as we vendored all of [AsmJit] and
+re-generated the wxWidgets support. If we ignore AsmJit and wx, there are still
+260k lines of code added and 320k lined removed, which is about 100k more than
+what our releases normally contain.
 
 You can download the readme describing the changes here: [Erlang/OTP 24 Readme].
 Or, as always, look at the release notes of the application you are interested in.
@@ -87,7 +89,8 @@ steep cost of profiling with eprof. When running the same analysis as above
 using [perf] it takes roughly 1.3 seconds to run.
 
 ```sh
-$ ERL_FLAGS="+JPperf true" perf record dialyzer --build_plt --apps erts
+$ ERL_FLAGS="+JPperf true" perf record dialyzer --build_plt \
+    --apps erts
 ```
 
 Then we can use tools such as [perf report], [hotspot] or [speedscope] to
