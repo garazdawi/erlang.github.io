@@ -11,7 +11,7 @@ additions to Erlang/OTP that I am most excited about!
 
 Erlang/OTP 24 includes contributions from 60+ external contributors totalling
 1390 commits changing 0.5 million(!) lines of code. Though I'm not sure the line
-number should count as we vendored all of [AsmJit] and re-generated the wxwidget
+number should count as we vendored all of [AsmJit] and re-generated the wxWidgets
 support.
 
 You can download the readme describing the changes here: [Erlang/OTP 24 Readme].
@@ -64,7 +64,7 @@ previous way to profile would be via something like [eprof].
 ```
 
 This increases the time to build the PLT from about 1.2 seconds to 15 seconds on
-my system. In the end you get something like the below that will guide you to
+my system. In the end, you get something like the below that will guide you to
 what you need to optimize. Maybe take a look at `erl_types:t_has_var*/1`
 and check if you really need to call it 13-15 million times!
 
@@ -99,16 +99,16 @@ $ hotspot perf.data
 
 ![alt text](/images/hotspot-dialyzer.png "Hotspot dialyzer")
 
-In the above we can see that we get roughly the same result as when using
+In the above, we can see that we get roughly the same result as when using
 `eprof`, though interestingly not exactly the same. I'll leave the whys of
 this up to the reader to find out :)
 
-With this little overhead when profiling, we can run scenarious that previous
+With this little overhead when profiling, we can run scenarios that previously
 would take too long to run when profiling. For those brave enough it might even
-be possible to run always on profiling in production!
+be possible to run always-on profiling in production!
 
 The journey with what can be done with [perf] has only started. In [PR-4676] we
-will be adding frame pointer support which will give much more accurate call
+will be adding frame pointer support which will give a much more accurate call
 frames when profiling and, in the end, the goal is to have mappings to Erlang
 source code lines instead of only functions when using [perf report] and
 [hotspot] to analyze a perf recording.
@@ -133,7 +133,7 @@ has failed.
 Thanks to the work of [Richard Carlsson] and [Hans Bolinder], when you compile
 Erlang code you now get the line and column of errors and warnings printed in
 the shell together with a small `^`-sign showing exactly where the error
-actually was. For example if you compile the below:
+actually was. For example, if you compile the below:
 
 ```erlang
 foo(A, B) ->
@@ -147,7 +147,7 @@ $ erlc t.erl
 t.erl:6: only association operators '=>' are allowed in map construction
 ```
 
-however in Erlang/OTP 24 you now also get the following printout:
+but in Erlang/OTP 24 you now also get the following printout:
 
 ```
 $ erlc test.erl
@@ -156,7 +156,7 @@ t.erl:6:16: only association operators '=>' are allowed in map construction
 %     |                ^
 ```
 
-This behaviour also extends into most of the Erlang code editors so that
+This behavior also extends into most of the Erlang code editors so that
 when you use VSCode or Emacs through [Erlang LS] or [flycheck] you also
 get a narrower warning/error indicator, for example in Emacs using [Erlang LS].
 
@@ -170,7 +170,7 @@ get a narrower warning/error indicator, for example in Emacs using [Erlang LS].
 
 One of the other big changes when it comes to error information is the
 introduction of [EEP-54]. In the past many of the [BIFs] (built-in functions)
-have given very crypting error messages.
+would give very cryptic error messages:
 
 ```erlang
 1> element({a,b,c}, 1).
@@ -179,12 +179,12 @@ have given very crypting error messages.
         called as element({a,b,c},1)
 ```
 
-In the example above, the only thing we really know is that one or more of the
+In the example above, the only thing we know is that one or more of the
 arguments are invalid, but without checking
 [the documentation](https://erlang.org/doc/man/erlang.html#element-2)
-there is no way of knowing. This is especially a problem for BIFs where the
-arguments may fail for different reasons depending on factors not visible in the
-arguments. For example in the `ets:update_counter` call below:
+there is no way of knowing which one and why. This is especially a problem for
+BIFs where the arguments may fail for different reasons depending on factors not
+visible in the arguments. For example in the `ets:update_counter` call below:
 
 ```erlang
 > ets:update_counter(table, k, 1).
@@ -194,9 +194,9 @@ arguments. For example in the `ets:update_counter` call below:
 ```
 
 We don't know if the call failed because the table did not exist at all
-or if the key `k` that we wanted to updated did not exist in the table.
+or if the key `k` that we wanted to update did not exist in the table.
 
-In Erlang/OTP 24 both of the examples above will have much clearer error
+In Erlang/OTP 24 both of the examples above will have a much clearer error
 messages.
 
 ```erlang
@@ -215,7 +215,7 @@ table
         *** argument 2: not a key that exists in the table
 ```
 
-That looks much better and now we can clearly see what the problem was!
+That looks much better and now we can see what the problem was!
 The standard logging formatters also include the additional information
 so that if this type of error happens in a production environment you will
 get the extra error information:
@@ -237,8 +237,8 @@ get the extra error information:
 ```
 
 [EEP-54] is not only useful for error messages coming from BIFs but can be used
-by any application that wants to privide extra information about their exceptions.
-For example we have been working on providing better error information around
+by any application that wants to provide extra information about their exceptions.
+For example, we have been working on providing better error information around
 `io:format` in [PR-4757](https://github.com/erlang/otp/pull/4757).
 
 [EEP-54]: https://www.erlang.org/erlang-enhancement-proposals/eep-0054.html
@@ -248,7 +248,7 @@ For example we have been working on providing better error information around
 
 Since Erlang/OTP R14 (released in 2010) the Erlang compiler and run-time system
 have co-operated to specially optimize the pattern of code used by
-`gen_server:call` like functionality in order to not have to scan a potentially
+`gen_server:call` like functionality to avoid scanning a potentially
 huge mailbox. The basic pattern looks like this:
 
 ```erlang
@@ -261,12 +261,12 @@ call(To, Msg) ->
 ```
 
 The compiler can from this figure out that when `Ref` is created, there can be
-no messages in the mailbox of the process that contain `Ref` and therefore it
+no messages in the mailbox of the process that contains `Ref` and therefore it
 can skip all of those when receiving the `Reply`.
 
 This has always worked great in simple scenarios like this, but as soon as you
-have to make the scenarios a little more complex it tended to break the
-compilers analysis and you would end up scanning the entire mailbox. For example
+had to make the scenarios a little more complex it tended to break the
+compiler's analysis and you would end up scanning the entire mailbox. For example,
 in the code below Erlang/OTP 23 will not optimize the receive.
 
 ```erlang
@@ -283,9 +283,9 @@ call(To, Msg, Async) ->
   end.
 ```
 
-That all changes with Erlang/OTP 24 though! Many more complex scenarios are now
+That all changes with Erlang/OTP 24! Many more complex scenarios are now
 covered by the optimization and a new compiler flag has been added to tell the
-user if an optimization actually is done.
+user if an optimization is done.
 
 ```sh
 $ erlc +recv_opt_info test.erl
@@ -315,9 +315,13 @@ multi_call(ToList, Msg) ->
 
 There are still a lot of places where this optimization does not trigger. For
 instance as soon as any of the make_ref/send/receive are in different modules it
-will not work. However, the new improvments in Erlang/OTP 24 make the number of
+will not work. However, the new improvements in Erlang/OTP 24 make the number of
 scenarios a lot fewer and now we also have the tools to check and see if the
-optimization is actually triggered!
+optimization is triggered!
+
+You can read more about this optimization and others in the [Efficiency Guide].
+
+[Efficiency Guide]: https://erlang.org/doc/efficiency_guide/processes.html#process-messages
 
 # EEP-53: Process aliases #
 
@@ -341,35 +345,35 @@ call(To, Msg, Tmo) ->
   end.
 ```
 
-This normally works very well except for when a timeout happens. When a timeout
+This normally works well except for when a timeout happens. When a timeout
 happens the process on the other end has no way to know that the reply is no
 longer needed and so will send it anyway when it is done with it. This causes
 all kinds of problems as the user of a third-party library would never know what
 messages to expect to be present in the mailbox.
 
 There have been numerous attempts to solve this problem using the primitives
-that Erlang gives you, but in the end most ended up just adding a `handle_info`
+that Erlang gives you, but in the end, most ended up just adding a `handle_info`
 in their `gen_server`s that ignored any unknown messages.
 
 In Erlang/OTP 24, [EEP-53] has introduced the `alias` functionality to solve this problem.
 An `alias` is a temporary reference to a process that can be used
-to send messages to. In my respects it works just as a `PID` except that
+to send messages to. In most respects, it works just as a PID except that
 the lifetime of an alias is not tied with the lifetime of the process it
 represents. So when you try to send a late reply to an alias that has been
 deactivated the message will just be dropped.
 
-The code changes needed to make this happen are very small and already used
-behind the scenes in all the standard behaviours of Erlang/OTP. The only thing
-needed to be changed in the example code above is that a new option has to be
+The code changes needed to make this happen are very small and are already used
+behind the scenes in all the standard behaviors of Erlang/OTP. The only thing
+needed to be changed in the example code above is that a new option must be
 given to `erlang:monitor` and the reply reference should now be the alias
-instead of the calling pid. That is like this:
+instead of the calling PID. That is, like this:
 
 ```erlang
 call(To, Msg, Tmo) ->
-  MonAliasRef = erlang:monitor(process, To, [{alias, demonitor}]),
+  MonAlias = erlang:monitor(process, To, [{alias, demonitor}]),
   To ! {call, MonAlias, MonAlias, Msg},
   receive
-    {'DOWN',MonAlias,_,_,Reason} ->
+    {'DOWN', MonAlias, _ , _, Reason} ->
       {error, Reason};
     {reply, MonAlias, Reply}
       erlang:demonitor(MonAlias,[flush]),
@@ -390,9 +394,9 @@ You can read more about this functionality in the [alias documentation].
 In Erlang/OTP 23 [erl_docgen] was extended to be able to emit [EEP-48] style
 documentation. This allowed the documentation to be used by `h(lists)` in
 the Erlang shell and external tools such as [Erlang LS]. However, there
-are very few application outside Erlang/OTP that use `erl_docgen` to
+are very few applications outside Erlang/OTP that use `erl_docgen` to
 create documentation, so [EEP-48] style documentation was unavailable to
-those applications, until now that is.
+those applications. Until now!
 
 Sponsored by the [Erlang Ecosystem Foundation], [Radek Szymczyszyn] has
 [added] support for [EEP-48] into [edoc] which means that from Erlang/OTP 24
@@ -409,7 +413,7 @@ Eshell V11.2.1  (abort with ^G)
      when PidTerm :: pid_term().
 
   Allows to be similar to erlang:process_info/1, but excludes
-  fields such as the mailbox, which have a tendency to grow
+  fields such as the mailbox, which tend to grow
   and be unsafe when called in production systems. Also includes
   a few more fields than what is usually given (monitors,
   monitored_by, etc.), and separates the fields in a more
@@ -430,14 +434,14 @@ the [Doc chunks section in the Edoc User's Guide].
 
 # gen_tcp socket nifs #
 
-The [gen_tcp] module has gotten support for using the new [socket] nif API
-instead of the previous inet driver. The new interface can be configured to
-be used either on a system level through setting the application configuration
-parameter like this; `-kernel inet_backend socket`, or on a per connection
-bases like this; `gen_tcp:connect(localhost,8080,[{inet_backend,socket}])`.
+The [gen_tcp] module has gotten support for optionally using the new [socket]
+nif API instead of the previous inet driver. The new interface can be configured
+to be used either on a system level through setting the application
+configuration parameter like this: `-kernel inet_backend socket`, or on a per
+connection bases like this: `gen_tcp:connect(localhost,8080,[{inet_backend,socket}])`.
 
-If you do this you will notice that he `Socket` returned by `gen_tcp` no longer
-is a port but instead of tuple containing (among other things) a PID and a
+If you do this you will notice that the `Socket` returned by `gen_tcp` no longer
+is a port but instead of a tuple containing (among other things) a PID and a
 reference.
 
 ```erlang
@@ -446,7 +450,7 @@ reference.
              {<0.88.0>,{'$socket',#Ref<0.2959644163.2576220161.68602>}}}}
 ```
 
-This datastructure is and always has been [opaque] so should not be inspected
+This data structure is and always has been [opaque], and therefore should not be inspected
 directly but instead only used as an argument to other [gen_tcp] and [inet]
 functions.
 
@@ -458,12 +462,12 @@ Port      Module         Recv Sent Owner    Local Address   Foreign Address    S
 esock[19] gen_tcp_socket 0    0    <0.98.0> localhost:44082 localhost:http-alt CD:SD STREAM 
 ```
 
-The [gen_tcp] API should be completely backwards compatible with the old
+The [gen_tcp] API should be completely backward compatible with the old
 implementation, so if you can, please test it and report any bugs that you find
 back to us.
 
-Why should you want to test this? Because in some of our benchmarks, we are able
-to achieve up to 4 times the throughput vs the old implementation. In others,
+Why should you want to test this? Because in some of our benchmarks, we can
+achieve up to 4 times the throughput vs the old implementation. In others,
 there is no difference or even a loss of throughput. So, as always, you need to
 measure and check for yourself!
 
@@ -481,7 +485,7 @@ that supervisor hierarchy from within. Some event happens on the socket that
 should trigger a graceful shutdown of the processes associated with the
 connection.
 
-Normally this would be done by using [supervisor:terminate_child/2], however
+Normally this would be done by using [supervisor:terminate_child/2]. However,
 this has two problems.
 
 1. It requires the child to know the ID of the child that needs to be terminated.
@@ -490,7 +494,7 @@ this has two problems.
 2. Calling [supervisor:terminate_child/2] is a synchronous operation, meaning that
    if you do the call in the child, you may end up in a deadlock as the top
    supervisor want to terminate the child while the child is blocking in the call
-   to terminate it self.
+   to terminate itself.
 
 To solve this problem [EEP-56] has added a mechanism in which a child can be
 marked as significant and if such a child terminates, it can trigger an automatic
@@ -500,22 +504,30 @@ This way a child process can trigger the shutdown of a supervisor hierarchy from
 within, without the child having to know anything about the supervisor hierarchy
 nor risking dead-locking itself during termination.
 
+You can read more about automatic shutdown in the [supervisor documentation].
+
 [ssl]: https://erlang.org/doc/man/ssl.html
 [ssh]: https://erlang.org/doc/man/ssh.html
 [EEP-56]: https://www.erlang.org/erlang-enhancement-proposals/eep-0056.html
 [supervisor:terminate_child/2]: https://erlang.org/doc/man/supervisor.html#terminate_child-2
+[supervisor documentation]: https://erlang.org/doc/man/supervisor.html#auto_shutdown
+
 
 # Edwards-curve Digital Signature Algorithm #
 
-With Erlang/OTP 24 comes support for [EdDSA] certificates. `EdDSA` can be
-used when connecting to or acting as a TLS 1.3 client/server. `EdDSA` is a
-type of [eliptic curve signature algorithm] that can be used for secure
-communication. The security of `ECDSA` relies on a
+With Erlang/OTP 24 comes support for [Edwards-curve Digital Signature Algorithm]
+(`EdDSA`). `EdDSA` can be used when connecting to or acting as a TLS 1.3
+client/server.
+
+`EdDSA` is a type of [elliptic curve signature algorithm] (`ECDSA`)
+that can be used for secure communication. The security of `ECDSA` relies on a
 [strong cryptographically secure random number] which can cause issues when
 the random number is by mistake not secure enough, as has been the case in several
-uses of ECDSA (none of them in Erlang as far as we know :). `EdDSA` does not
-rely on a strong random number to be secure. This means that when you are using
-EdDSA, the communication is secure even if your random number generator is not.
+uses of ECDSA (none of them in Erlang as far as we know :).
+
+`EdDSA` does not rely on a strong random number to be secure. This means that
+when you are using `EdDSA`, the communication is secure even if your random
+number generator is not.
 
 Despite the added security, `EdDSA` is claimed to be faster than other eliptic
 curve signature algorithms. If you have [OpenSSL] 1.1.1 or later, then as of
@@ -528,6 +540,7 @@ Erlang/OTP 24 you will have access to this algorithm!
  ...]                     ^        ^
 ```
 
-[EdDSA]: https://datatracker.ietf.org/doc/html/rfc8032
+[Edwards-curve Digital Signature Algorithm]: https://datatracker.ietf.org/doc/html/rfc8032
 [OpenSSL]: https://www.openssl.org/
 [strong cryptographically secure random number]: http://erlang.org/doc/man/crypto.html#strong_rand_bytes-1
+[elliptic curve signature algorithm]: https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
