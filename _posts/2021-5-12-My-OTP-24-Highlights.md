@@ -127,15 +127,15 @@ source code lines instead of only functions when using [perf report] and
 
 # Improved error messages #
 
-Erlang tends to get a bad reputation for the error messages that it produces.
-Two great new features have been added to help the user understand why something
-has failed.
+Erlang' error messages tend to get a lot of (valid) critisism for being hard to
+understand. Two great new features have been added to help the user understand
+why something has failed.
 
 ## Column number in warnings and errors ##
 
 Thanks to the work of [Richard Carlsson] and [Hans Bolinder], when you compile
 Erlang code you now get the line and column of errors and warnings printed in
-the shell together with a small `^`-sign showing exactly where the error
+the shell together with a `^`-sign showing exactly where the error
 actually was. For example, if you compile the below:
 
 ```erlang
@@ -249,8 +249,8 @@ For example, we have been working on providing better error information around
 
 # Improved receive optimizations #
 
-Since Erlang/OTP R14 (released in 2010) the Erlang compiler and run-time system
-have co-operated to specially optimize the pattern of code used by
+Since Erlang/OTP R14 (released in 2010), the Erlang compiler and run-time system
+have co-operated to optimize for the pattern of code used by
 `gen_server:call` like functionality to avoid scanning a potentially
 huge mailbox. The basic pattern looks like this:
 
@@ -328,7 +328,7 @@ You can read more about this optimization and others in the [Efficiency Guide].
 
 # EEP-53: Process aliases #
 
-When doing a call to another Erlang process, the normal pattern used by
+When doing a call to another Erlang process, the pattern used by
 `gen_server:call`, `gen_statem:call` and others normally looks something
 like this:
 
@@ -469,8 +469,8 @@ The [gen_tcp] API should be completely backward compatible with the old
 implementation, so if you can, please test it and report any bugs that you find
 back to us.
 
-Why should you want to test this? Because in some of our benchmarks, we can
-achieve up to 4 times the throughput vs the old implementation. In others,
+Why should you want to test this? Because in some of our benchmarks, we get up
+to 4 times the throughput vs the old implementation. In others,
 there is no difference or even a loss of throughput. So, as always, you need to
 measure and check for yourself!
 
@@ -491,12 +491,13 @@ connection.
 Normally this would be done by using [supervisor:terminate_child/2]. However,
 this has two problems.
 
-1. It requires the child to know the ID of the child that needs to be terminated.
-   This is simple when there is just one process in the supervisor, but when there
-   are supervisors under supervisors, this becomes harder and harder to figure out.
-2. Calling [supervisor:terminate_child/2] is a synchronous operation, meaning that
-   if you do the call in the child, you may end up in a deadlock as the top
-   supervisor want to terminate the child while the child is blocking in the call
+1. It requires the child to know the ID of the child that needs to be terminated
+   and the PID of the supervisor to talk to. This is simple when there is just
+   one process in the supervisor, but when there are supervisors under
+   supervisors, this becomes harder and harder to figure out.
+2. Calling [supervisor:terminate_child/2] is a synchronous operation. This means
+   that if you do the call in the child, you may end up in a deadlock as the top
+   supervisor wants to terminate the child while the child is blocking in the call
    to terminate itself.
 
 To solve this problem [EEP-56] has added a mechanism in which a child can be
