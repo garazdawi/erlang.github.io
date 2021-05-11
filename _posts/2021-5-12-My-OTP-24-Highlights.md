@@ -18,7 +18,7 @@ what our releases normally contain.
 
 You can download the readme describing the changes here: [Erlang/OTP 24 Readme].
 Or, as always, look at the release notes of the application you are interested in.
-For instance here: [Erlang/OTP 24 - Erts Release Notes].
+For instance here: [Erlang/OTP 24 - Erts Release Notes - Version 12.0].
 
 This years highlights are:
 * [BeamAsm - the JIT compiler for Erlang](#beamasm---the-jit-compiler-for-erlang)
@@ -26,13 +26,13 @@ This years highlights are:
 * [Improved receive optimizations](#improved-receive-optimizations)
 * [EEP-53: Process aliases](#eep-53-process-aliases)
 * [EEP-48: Documentation chunks for edoc](#eep-48-documentation-chunks-for-edoc)
-* [gen_tcp socket nifs](#gen_tcp-socket-nifs)
+* [socket support in gen_tcp](#socket-support-in-gen_tcp)
 * [EEP-56: Supervisor automatic shutdown](#EEP-56-supervisor-automatic-shutdown)
 * [Edwards-curve Digital Signature Algorithm](#edwards-curve-digital-signature-algorithm)
 
 [about 10 years]: https://vimeo.com/44231138
 [Erlang/OTP 24 Readme]: http://erlang.org/download/otp_src_24.0.readme
-[Erlang/OTP 24 - Erts Release Notes]: http://erlang.org/doc/apps/erts/notes.html
+[Erlang/OTP 24 - Erts Release Notes - Version 12.0]: http://erlang.org/doc/apps/erts/notes.html#erts-12.0
 [AsmJit]: https://asmjit.com/
 [As]: https://blog.erlang.org/My-OTP-21-Highlights/
 [tradition]: https://blog.erlang.org/OTP-22-Highlights/
@@ -127,7 +127,7 @@ source code lines instead of only functions when using [perf report] and
 
 # Improved error messages #
 
-Erlang' error messages tend to get a lot of (valid) critisism for being hard to
+Erlang's error messages tend to get a lot of (valid) critisism for being hard to
 understand. Two great new features have been added to help the user understand
 why something has failed.
 
@@ -426,7 +426,7 @@ Eshell V11.2.1  (abort with ^G)
 For more information about how to enable this in your project see
 the [Doc chunks section in the Edoc User's Guide].
 
-[erl_docgen]: http://erlang.org/doc/man/erl_docgen.html
+[erl_docgen]: http://erlang.org/doc/man/erl_docgen_app.html
 [EEP-48]: https://www.erlang.org/erlang-enhancement-proposals/eep-0048.html
 [Erlang LS]: https://erlang-ls.github.io/
 [Erlang Ecosystem Foundation]: https://erlef.org/
@@ -435,7 +435,7 @@ the [Doc chunks section in the Edoc User's Guide].
 [added]: https://github.com/erlang/otp/pull/2803
 [Doc chunks section in the Edoc User's Guide]: https://erlang.org/doc/apps/edoc/chapter.html#doc-chunks
 
-# gen_tcp socket nifs #
+# `socket` support in `gen_tcp` #
 
 The [gen_tcp] module has gotten support for optionally using the new [socket]
 nif API instead of the previous inet driver. The new interface can be configured
